@@ -15,13 +15,16 @@ class Account(Base):
     status: Mapped[str] = mapped_column(String(20), nullable=False, default="active")
     role: Mapped[str] = mapped_column(String(20), nullable=False, default="user")
 
-    profile: Mapped[str] = mapped_column()
+    profile: Mapped["Profile"] = relationship(
+        back_populates="account",
+        cascade="all, delete-orphan",
+    )
 
 
 class Profile(Base):
     __tablename__ = "profiles"
 
-    account_id: Mapped[str] = mapped_column(
+    account_id: Mapped[int] = mapped_column(
         ForeignKey("accounts.id"), primary_key=True
     )
     display_name: Mapped[str] = mapped_column(String(50), nullable=False)
